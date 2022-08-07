@@ -34,9 +34,28 @@ class LineBotService
      * @return int
      * @throws \LINE\LINEBot\Exception\InvalidSignatureException
      */
+
+    public function validateSignature(Request $request): void
+    {
+        // リクエストヘッダーについてくる実際の署名
+        $signature = $request->header('x-line-signature');
+        if ($signature === null) {
+            abort(400);
+        }
+
+        // LINEチャネルシークレットとリクエストボディを基に署名を生成
+        $hash = hash_hmac('sha256', $request->getContent(), config('app.line_channel_secret'), true);
+        $expect_signature = base64_encode($hash);
+
+        // 実際の署名と生成した署名が同じであれば検証OK
+        if (!hash_equals($expect_signature, $signature)) {
+            abort(400);
+        }
+    }
+
     public function eventHandler(Request $request): int
     {
-        return 200;
+        // return 200;
 
         // 署名を検証しLINE以外からのリクエストを受け付けない。
         $this->validateSignature($request);
@@ -71,22 +90,5 @@ class LineBotService
         }
 
         return $response->getHTTPStatus();
-    }
-    public function validateSignature(Request $request): void
-    {
-        // リクエストヘッダーについてくる実際の署名
-        $signature = $request->header('x-line-signature');
-        if ($signature === null) {
-            abort(400);
-        }
-
-        // LINEチャネルシークレットとリクエストボディを基に署名を生成
-        $hash = hash_hmac('sha256', $request->getContent(), config('app.line_channel_secret'), true);
-        $expect_signature = base64_encode($hash);
-
-        // 実際の署名と生成した署名が同じであれば検証OK
-        if (!hash_equals($expect_signature, $signature)) {
-            abort(400);
-        }
     }
 }
