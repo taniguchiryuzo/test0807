@@ -20,8 +20,10 @@ class LineBotService
 
     public function __construct()
     {
-        $this->httpClient = new CurlHTTPClient('<channel access token>');
-        $this->bot = new LINEBot($this->httpClient, ['channelSecret' => '<channel secret>']);
+        // $this->httpClient = new CurlHTTPClient('<channel access token>');
+        // $this->bot = new LINEBot($this->httpClient, ['channelSecret' => '<channel secret>']);
+        $this->httpClient = new CurlHTTPClient(config('app.line_channel_access_token'));
+        $this->bot = new LINEBot($this->httpClient, ['channelSecret' => config('app.line_channel_secret')]);
     }
 
     /**
