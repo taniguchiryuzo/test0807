@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot;
+use LINE\LINEBot\validateSignature;
 
 class LineBotService
 {
