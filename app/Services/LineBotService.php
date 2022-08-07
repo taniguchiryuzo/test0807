@@ -36,7 +36,7 @@ class LineBotService
      */
     public function eventHandler(Request $request): int
     {
-        // return 200;
+        return 200;
 
         // 署名を検証しLINE以外からのリクエストを受け付けない。
         $this->validateSignature($request);
